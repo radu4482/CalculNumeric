@@ -105,7 +105,7 @@ def matrix_equality(matrix_dict_1, matrix_dict_2, eps):
 
 def matrix_product(matrix_dict, tr_matrix_and_sizes):
     p, q, triang_matrix = tr_matrix_and_sizes
-    a, b, c = triang_matrix
+    a, c, b = triang_matrix
     result_matrix = {}
 
     for i in matrix_dict.keys():
@@ -145,8 +145,6 @@ def main(eps):
 
     my_product = matrix_product(matrix_dict, (p, q, triang_matrix))
     mat_product = read_matrix('aorib.txt')
-    # print(my_product)
-    # print(mat_product)
     print(matrix_equality(my_product, mat_product, eps))
 
 
