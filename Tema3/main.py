@@ -116,7 +116,7 @@ def matrix_product(matrix_dict, tr_matrix_and_sizes):
             for k in matrix_dict[i].keys():
 
                 factor = 0
-                #aici practic implementez definitia din pdf. a_ij = a daca e pe diag principala, b daca e deasupra si c daca e sub; 0 in caz contrat
+                # aici practic implementez definitia din pdf. a_ij = a daca e pe diag principala, b daca e deasupra si c daca e sub; 0 in caz contrat
                 if j == k:
                     factor = a[k]
                 else:
@@ -135,6 +135,46 @@ def matrix_product(matrix_dict, tr_matrix_and_sizes):
     return result_matrix
 
 
+def triag_matrix_product(tr_matrix_and_sizes_1, tr_matrix_and_sizes_2):
+    p1, q1, triang_matrix1 = tr_matrix_and_sizes_1
+    a1, c1, b1 = triang_matrix1
+    p2, q2, triang_matrix2 = tr_matrix_and_sizes_2
+    a2, c2, b2 = triang_matrix2
+
+    result_matrix = {}
+    size = len(a1)
+    if size != len(a2): return False
+
+    for i in range(size):
+        myA = a1[i]
+        secondA = a2[i]
+        aux_result = 0
+        for j in {i - p1, i, i + q1}:
+            if j >= 0:
+                if j < size - 1:
+                    myC = c1[j]
+                else:
+                    myC = 0
+                if j < size - 1:
+                    myB = b1[j]
+                else:
+                    myB = 0
+                if i - j == q2 and j < size - q2:
+                    secondB = b2[j]
+                else:
+                    secondB = 0
+                if j - i == p2 and j < size - p2:
+                    secondC = c2[i]
+                else:
+                    secondC = 0
+                aux_result = myA * secondA + myB * secondB + myC * secondC
+                if aux_result != 0 and 0 <= j < size:
+                    if i not in result_matrix.keys():
+                        result_matrix[i] = {}
+                    result_matrix[i][j] = aux_result
+    return result_matrix
+
+
 def main(eps):
     matrix_dict = read_matrix('a.txt')
     p, q, triang_matrix = read_triang_matrix('b.txt')
@@ -147,7 +187,22 @@ def main(eps):
     mat_product = read_matrix('aorib.txt')
     print(matrix_equality(my_product, mat_product, eps))
 
+    print(triag_matrix_product((p, q, triang_matrix), (p, q, triang_matrix)))
+
+
+def getEpsilon():
+    u = 1
+    aux = 0
+
+    while u != 0 and 1 + u != 1:
+        lastU = u
+        u /= 10
+        aux = aux + 1
+    return lastU
+
 
 if __name__ == "__main__":
-    epsilon = float(sys.argv[1])
+    epsilon = getEpsilon()
+    print(epsilon)
+    # epsilon = float(sys.argv[1])
     main(epsilon)
